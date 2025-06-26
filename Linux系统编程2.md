@@ -1,0 +1,213 @@
+# 进程
+
+## wait 回收子进程
+
+**作用**：
+
+1.  阻塞等待子进程退出（终止）
+2. 回收子进程残留在内核的pcb
+3. 获取子进程的退出状态
+
+![image-20250625101443489](C:\Users\a1956\AppData\Roaming\Typora\typora-user-images\image-20250625101443489.png)
+
+![image-20250625101556196](C:\Users\a1956\AppData\Roaming\Typora\typora-user-images\image-20250625101556196.png)
+
+
+
+## waitpid 函数
+
+```
+pid_t waitpid(pid_t pid,int * wstatus,int options);
+```
+
+**参数：
+	pid：通过pid指定回收某一个子进程**
+
+​     **>0:回收，某一个子进程**
+
+​     **-1：回收任意子进程**
+
+​      **0：回收与父进程同一进程组的子进程
+​	wstatus:(传出)回收子进程状态
+​	options:WNOHANG--指定回收方式为“非阻塞”**
+
+![image-20250625155110081](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625155110081.png)
+
+
+
+
+
+## 回收N个子进程
+
+### 阻塞 
+
+1. 
+
+![image-20250625154238173](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625154238173.png)
+
+2. 
+
+![image-20250625154455614](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625154455614.png)
+
+### ==非阻塞方式==
+
+![image-20250625154843708](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625154843708.png)
+
+## 总结
+
+**==一次wait.waitpid调用，只能回收一个子进程==**
+
+==回收N个只能放在循环中==
+
+
+
+
+
+# 进程间通信IPC
+
+- 进程间通信原理：借助多个进程共同使用同一个内核，借助内核传递数据
+
+## 进程间通信的方法
+
+1. 管道：最简单
+2. 信号：开销小
+3. mmap映射：速度快，非血缘关系间
+4. socket（本地套接字）：稳定性好
+
+## 管道pipe
+
+- 实现原理：Linux内核使用环形队列机制，借助缓冲区（4K）实现。
+- 特质：
+  1. 本质：伪文件（实为内核缓冲区）
+  2. 用于进程间通信，一个读端一个写端
+  3. 规定，数据从写端流入，读端流出
+- 局限性：
+
+1. 自己写，不能自己读
+2. 管道中的数据，读走没，不能反复读取
+3. 半双工通信
+4. 必须应用于血缘关系进程间
+
+### 使用的函数
+
+```shell
+//函数调用成功，自动创建匿名管道，返回两个文件描述符，无需open，但需要手动close
+int pipe(int pipifd[2])
+fd[0]:管道读端  r
+fd[1]:管道写端  w
+返回值：
+	成功：0
+	失败：-1、0
+```
+
+- 父子进程 管道通信ipc实例：
+
+ 
+
+## 管道读写行为
+
+读管道：
+
+- 管道有数据，read返回实际读到的字节数
+- 无数据 1）无写端，read返回0  2）有写端，阻塞等待
+
+写管道：
+
+-  无读端，异常终止（SIGPIPE信号）
+- 有读端  1）管道已满， 阻塞等待
+
+​                     2）管道未满，返回实际写出字节数
+
+
+
+## 父子进程ls -wc-l
+
+![image-20250625180205783](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625180205783.png)
+
+
+
+
+
+## 兄弟进程ls-wc-l
+
+阻塞原因：
+
+![image-20250625183952550](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625183952550.png)
+
+正确代码：
+
+![image-20250625184142466](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625184142466.png)
+
+## 管道缓冲区
+
+- 命令查询
+
+![image-20250625184328252](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625184328252.png)
+
+
+
+- 函数查询
+
+![image-20250625184639736](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625184639736.png)
+
+
+
+![image-20250625184749704](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625184749704.png)
+
+
+
+## 管道优劣
+
+- 优点：简单。
+- 缺点：
+  1. ==只能单向通信==，实现双向通信，需要两个管道
+  2. 只能应用于父子，兄弟（有公共祖先）。无血缘关系进程，后来用fifo替代
+
+
+
+## 命名管道fifo
+
+- 命令创建：mkfifo 管道名
+
+- 函数创建：mkfifo
+
+- ```c
+  int mkfifo (const char* pathname,mode_t mode)
+  ```
+
+- 可用于无血缘关系的进程间通信
+- 数据一次性读取
+- 读端：以O_RDONLY打开fifo管道
+- 写端：以O_WRONLY/O_RDWR打开同一个fifo管道
+
+
+
+# mmap
+
+### 文件进程间通信
+
+- 有无血缘关系的进程，都可以使用同一个文件来实现进程通信
+
+
+
+## 建立、释放映射区
+
+**建立**：
+
+![image-20250625200204527](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625200204527.png)
+
+**释放**：
+
+![image-20250625200328448](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625200328448.png)
+
+
+
+### mmap建立映射区
+
+![image-20250625201412057](C:/Users/a1956/AppData/Roaming/Typora/typora-user-images/image-20250625201412057.png)
+
+
+
+## mmap使用注意事项
+
+ 
