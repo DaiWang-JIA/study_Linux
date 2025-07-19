@@ -444,3 +444,484 @@ int socket(int domain,int type,int protocol);
 
 # 三次握手四次挥手
 
+## 知识点概述
+
+
+
+## tcp协议
+
+![image-20250711081415749](Linux网络编程.assets/image-20250711081415749.png)
+
+![image-20250711082223382](Linux网络编程.assets/image-20250711082223382.png)
+
+
+
+## 三次握手过程
+
+![image-20250711083011848](Linux网络编程.assets/image-20250711083011848.png)
+
+![image-20250711082533314](Linux网络编程.assets/image-20250711082533314.png)
+
+![image-20250711085041016](Linux网络编程.assets/image-20250711085041016.png)
+
+![image-20250711085241638](Linux网络编程.assets/image-20250711085241638.png)
+
+![image-20250711085526855](Linux网络编程.assets/image-20250711085526855.png)
+
+
+
+## 四次挥手过程
+
+![image-20250711140948864](Linux网络编程.assets/image-20250711140948864.png)
+
+![image-20250711141001386](Linux网络编程.assets/image-20250711141001386.png)
+
+![image-20250711142537315](Linux网络编程.assets/image-20250711142537315.png)
+
+![image-20250711143128472](Linux网络编程.assets/image-20250711143128472.png)
+
+
+
+## TCP滑动窗口
+
+![image-20250711144405558](Linux网络编程.assets/image-20250711144405558.png)
+
+## 滑动窗口如何控制发送端阻塞
+
+![image-20250711162051227](Linux网络编程.assets/image-20250711162051227.png)
+
+![image-20250711162821028](Linux网络编程.assets/image-20250711162821028.png)
+
+
+
+## TCP通信关键字
+
+![image-20250711162916372](Linux网络编程.assets/image-20250711162916372.png)
+
+![image-20250711163205029](Linux网络编程.assets/image-20250711163205029.png)
+
+
+
+## tcp通信的全部过程分析
+
+![image-20250711163325748](Linux网络编程.assets/image-20250711163325748.png)
+
+![image-20250711181056166](Linux网络编程.assets/image-20250711181056166.png)
+
+![image-20250711181317717](Linux网络编程.assets/image-20250711181317717.png)
+
+![image-20250711182105527](Linux网络编程.assets/image-20250711182105527.png)
+
+![image-20250711183240416](Linux网络编程.assets/image-20250711183240416.png)
+
+![image-20250711184140635](Linux网络编程.assets/image-20250711184140635.png)
+
+
+
+
+
+
+
+
+
+# 套接字并发服务器
+
+
+
+## 上面套接字服务器的弊端
+
+**无法处理多个客户端**
+
+
+
+## 如何通过多进程的方式完成服务器端的并发
+
+![image-20250712091359001](Linux网络编程.assets/image-20250712091359001.png)
+
+- 多进程版的服务器开发
+
+![image-20250712161018091](Linux网络编程.assets/image-20250712161018091.png)
+
+![image-20250712091525849](Linux网络编程.assets/image-20250712091525849.png)
+
+## 多进程服务器
+
+![image-20250712161811577](Linux网络编程.assets/image-20250712161811577.png)
+
+![image-20250712161846194](Linux网络编程.assets/image-20250712161846194.png)
+
+![image-20250712161912474](Linux网络编程.assets/image-20250712161912474.png)
+
+![image-20250712161942976](Linux网络编程.assets/image-20250712161942976.png)
+
+
+
+## 多线程版tcp服务器思路处理
+
+![image-20250712164422789](Linux网络编程.assets/image-20250712164422789.png)
+
+![image-20250712164505473](Linux网络编程.assets/image-20250712164505473.png)
+
+![image-20250712203440785](Linux网络编程.assets/image-20250712203440785.png)
+
+![image-20250712203504925](Linux网络编程.assets/image-20250712203504925.png)
+
+![image-20250712203528110](Linux网络编程.assets/image-20250712203528110.png)
+
+![image-20250712203547247](Linux网络编程.assets/image-20250712203547247.png)
+
+
+
+
+
+
+
+# TCP状态转换
+
+![image-20250712212530019](Linux网络编程.assets/image-20250712212530019.png)
+
+## 三次握手状态变化
+
+```c
+//tcp通信状态的变化
+///////////三次握手////////////
+//先启动服务器->绑定->设置监听 listen()
+  服务器的状态变化： 无状态->LISTEN
+//状态变化是从三次握手开始的（客户端发起连接）
+第一次握手：
+      客户端：给服务端发送SYN，无状态->SYN_SENT
+      服务器：接受数据：LISTEN
+      
+第二次握手：
+      服务器：给客户端回复ACK，并发送连接请求SYN，状态：LISTEN->SYN_RVCD
+      客户端:受到ACK，状态：SYN_SENT->ESTABLISED
+ 
+第三次握手：
+       客户端：回复ACK，状态没有变化
+       服务器：收到ACK，状态：SYN_RVED-ESTABLISED
+      
+```
+
+- 在双向连接建立之后，通信过程，tcp状态不会发生变化
+
+
+
+## 四次挥手状态变化
+
+```c
+///////四次挥手////////
+第一次挥手:
+	客户端：
+	1.调用了close（）函数，相当于在tcp协议中将FIN设为1
+	2.状态变化：ESTABLISED->FIN_WAIT_1;
+	服务器：
+	状态无变化：ESTABLISED
+	
+第二次挥手：
+	服务器：收到FIN，回复ACK，状态：ESTABLISED->CLOSE_WAIT
+	客户端：收到ACK，状态变化：FIN_WAIT_1->FIN_WAIT_2
+	
+第三次挥手：
+	服务器：给客户端发生断开连接请求，FIN设为1，状态变化：CLOSE_WAIT->LAST_ACK
+	客户端：收到服务器断开连接的请求FIN,状态变化：FIN_WAIT_2->TIME_WAIT
+	
+第四次挥手：
+	客户端：回复ACK，状态没变
+        -TIME_WAIT会持续一段时间，时间到达之后，周期结束
+	服务器：收到ACK，LAST_ACK->无状态
+	
+	
+```
+
+
+
+## 处于TIME_WAIT的进程等待2MSL的原因
+
+![image-20250713142825111](Linux网络编程.assets/image-20250713142825111.png)
+
+![image-20250713142804667](Linux网络编程.assets/image-20250713142804667.png)
+
+
+
+## 半关闭
+
+![image-20250713145408951](Linux网络编程.assets/image-20250713145408951.png)
+
+## 半关闭函数
+
+![image-20250713145800630](Linux网络编程.assets/image-20250713145800630.png)
+
+
+
+## 通过netstat命令查看进程的网络通信
+
+![image-20250713151227467](Linux网络编程.assets/image-20250713151227467.png)
+
+
+
+
+
+## 端口复用
+
+![image-20250713161136405](Linux网络编程.assets/image-20250713161136405.png)
+
+![image-20250713161952938](Linux网络编程.assets/image-20250713161952938.png)
+
+
+
+
+
+
+
+
+
+# IO多路转接之select
+
+
+
+## IO多路转接
+
+![image-20250714150110962](Linux网络编程.assets/image-20250714150110962.png)
+
+![image-20250714150325601](Linux网络编程.assets/image-20250714150325601.png)
+
+![image-20250714150838262](Linux网络编程.assets/image-20250714150838262.png)
+
+![image-20250714151124897](Linux网络编程.assets/image-20250714151124897.png)
+
+
+
+## select
+
+![image-20250714151158820](Linux网络编程.assets/image-20250714151158820.png)
+
+![image-20250714173331070](Linux网络编程.assets/image-20250714173331070.png)==**函数细节**==
+
+![image-20250716123821599](Linux网络编程.assets/image-20250716123821599.png)
+
+![image-20250716151932300](Linux网络编程.assets/image-20250716151932300.png)
+
+
+
+
+- 文件描述符集合操作函数
+
+```c
+ //fd_set类型数据操作函数
+//将文件描述符fd从set集合中删除
+void FD_CLR(int fd, fd_set *set);
+
+//判断文件描述符fd是不是在set集合中，如果在返回1，如果不在返回0
+int  FD_ISSET(int fd, fd_set *set);
+
+//将文件描述符fd添加到set集合中
+void FD_SET(int fd, fd_set *set);
+
+//清空set中设置的所有数值，用于初始化
+void FD_ZERO(fd_set *set);
+
+```
+
+
+
+
+
+## select的fd_set和文件描述符表关系
+
+![image-20250716153723927](Linux网络编程.assets/image-20250716153723927.png)
+
+![image-20250716154727360](Linux网络编程.assets/image-20250716154727360.png)
+
+
+
+## 使用select处理服务端通信
+
+![image-20250716163137428](Linux网络编程.assets/image-20250716163137428.png)
+
+![image-20250716163212870](Linux网络编程.assets/image-20250716163212870.png)
+
+
+
+
+
+
+
+# IO多路转接之epoll
+
+
+
+## poll
+
+![image-20250717215016449](Linux网络编程.assets/image-20250717215016449.png)
+
+
+
+- 函数
+
+![image-20250718191348653](Linux网络编程.assets/image-20250718191348653.png)
+
+![image-20250718192050761](Linux网络编程.assets/image-20250718192050761.png)
+
+
+
+- 部分代码
+
+![image-20250718192250408](Linux网络编程.assets/image-20250718192250408.png)
+
+
+
+
+
+## epoll
+
+![image-20250718193058051](Linux网络编程.assets/image-20250718193058051.png)
+
+**三者比较：**
+
+![image-20250718193734598](Linux网络编程.assets/image-20250718193734598.png)
+
+![image-20250718194447395](Linux网络编程.assets/image-20250718194447395.png)
+
+![image-20250718193800658](Linux网络编程.assets/image-20250718193800658.png)
+
+![image-20250718194604185](Linux网络编程.assets/image-20250718194604185.png)
+
+
+
+## epoll的使用
+
+![image-20250718194657504](Linux网络编程.assets/image-20250718194657504.png)
+
+
+
+- 函数
+
+ ![image-20250718200209663](Linux网络编程.assets/image-20250718200209663.png)
+
+![image-20250718201027893](Linux网络编程.assets/image-20250718201027893.png)
+
+![image-20250718201206968](Linux网络编程.assets/image-20250718201206968.png)
+
+
+
+## epoll的检测函数-epoll_wait()
+
+![image-20250718202441090](Linux网络编程.assets/image-20250718202441090.png)
+
+
+
+
+
+## 基于epoll的tcp服务器的伪代码
+
+![image-20250718203808567](Linux网络编程.assets/image-20250718203808567.png)
+
+![image-20250718203827065](Linux网络编程.assets/image-20250718203827065.png)
+
+![image-20250718203948979](Linux网络编程.assets/image-20250718203948979.png)
+
+ 
+
+
+
+## epoll的水平模式
+
+![image-20250718211356689](Linux网络编程.assets/image-20250718211356689.png)
+
+- LT模式：通知频率高
+
+![image-20250718212002245](Linux网络编程.assets/image-20250718212002245.png)
+
+
+
+
+
+## epoll的边沿模式
+
+![image-20250718213022853](Linux网络编程.assets/image-20250718213022853.png)
+
+
+
+- ET模式
+
+![image-20250718214150785](Linux网络编程.assets/image-20250718214150785.png)
+
+- 如何设置边沿模式
+
+![image-20250718214836631](Linux网络编程.assets/image-20250718214836631.png)
+
+
+
+![image-20250718220950328](Linux网络编程.assets/image-20250718220950328.png)
+
+
+
+![image-20250718222349326](Linux网络编程.assets/image-20250718222349326.png)
+
+
+
+![image-20250718225051160](Linux网络编程.assets/image-20250718225051160.png)
+
+
+
+
+
+
+
+
+
+# udp通信
+
+## udp特点
+
+![image-20250719194736486](Linux网络编程.assets/image-20250719194736486.png)
+
+![image-20250719154626180](Linux网络编程.assets/image-20250719154626180.png)
+
+
+
+## udp通信流程
+
+![image-20250719193105063](Linux网络编程.assets/image-20250719193105063.png)
+
+- 服务器端
+
+![image-20250719193334968](Linux网络编程.assets/image-20250719193334968.png)
+
+
+
+- 客户端
+
+![image-20250719193501417](Linux网络编程.assets/image-20250719193501417.png)
+
+
+
+## sendto和recvfrom函数
+
+- 发送数据函数
+
+![image-20250719195440611](Linux网络编程.assets/image-20250719195440611.png)
+
+
+
+- 接收函数
+
+![image-20250719194119372](Linux网络编程.assets/image-20250719194119372.png)
+
+==接收和发送数据的函数默认是阻塞的==
+
+
+
+## udp服务器程序代码
+
+![image-20250719202545910](Linux网络编程.assets/image-20250719202545910.png)
+
+![image-20250719202609378](Linux网络编程.assets/image-20250719202609378.png)
+
+
+
+## udp客户端代码
+
+![image-20250719204843535](Linux网络编程.assets/image-20250719204843535.png)
+
+![image-20250719204933677](Linux网络编程.assets/image-20250719204933677.png)
