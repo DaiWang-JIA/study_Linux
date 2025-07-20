@@ -925,3 +925,99 @@ void FD_ZERO(fd_set *set);
 ![image-20250719204843535](Linux网络编程.assets/image-20250719204843535.png)
 
 ![image-20250719204933677](Linux网络编程.assets/image-20250719204933677.png)
+
+
+
+## udp应用场景
+
+![image-20250720074057257](Linux网络编程.assets/image-20250720074057257.png)
+
+
+
+## 广播
+
+![image-20250720080921029](Linux网络编程.assets/image-20250720080921029.png)
+
+
+
+- 特点
+
+![image-20250720080819035](Linux网络编程.assets/image-20250720080819035.png)
+
+![image-20250720082527521](Linux网络编程.assets/image-20250720082527521.png)
+
+
+
+- 通信流程
+
+![image-20250720081337897](Linux网络编程.assets/image-20250720081337897.png)
+
+![image-20250720081503082](Linux网络编程.assets/image-20250720081503082.png)
+
+
+
+- 设置广播属性
+
+![image-20250720095521397](Linux网络编程.assets/image-20250720095521397.png)
+
+
+
+- 数据发送端代码
+
+![image-20250720100016087](Linux网络编程.assets/image-20250720100016087.png)
+
+
+
+- 数据接收端代码
+
+![image-20250720100104730](Linux网络编程.assets/image-20250720100104730.png)
+
+![image-20250720100133226](Linux网络编程.assets/image-20250720100133226.png)
+
+![image-20250720101807147](Linux网络编程.assets/image-20250720101807147.png)
+
+
+
+## 组播（多播）
+
+![image-20250720110300747](Linux网络编程.assets/image-20250720110300747.png)
+
+![image-20250720095245942](Linux网络编程.assets/image-20250720095245942.png)
+
+
+
+
+
+- 组播地址
+
+![image-20250720105107331](Linux网络编程.assets/image-20250720105107331.png)
+
+
+
+- 组播通信流程
+
+![image-20250720110205256](Linux网络编程.assets/image-20250720110205256.png)
+
+![image-20250720110151156](Linux网络编程.assets/image-20250720110151156.png)
+
+
+
+- 设置组播属性
+
+![image-20250720114900459](Linux网络编程.assets/image-20250720114900459.png)
+
+
+
+- 加入到组播地址
+
+![image-20250720115344963](Linux网络编程.assets/image-20250720115344963.png)
+
+![image-20250720115650838](Linux网络编程.assets/image-20250720115650838.png)
+
+![image-20250720115220400](Linux网络编程.assets/image-20250720115220400.png)
+
+
+
+- 组播特点总结
+
+![image-20250720121908402](Linux网络编程.assets/image-20250720121908402.png)
