@@ -1021,3 +1021,226 @@ void FD_ZERO(fd_set *set);
 - 组播特点总结
 
 ![image-20250720121908402](Linux网络编程.assets/image-20250720121908402.png)
+
+
+
+
+
+# 本地套接字
+
+ ![image-20250721082331788](Linux网络编程.assets/image-20250721082331788.png)
+
+
+
+## 通信流程-基于tcp
+
+![image-20250721083151489](Linux网络编程.assets/image-20250721083151489.png)
+
+
+
+- 服务器端
+
+![image-20250721083506036](Linux网络编程.assets/image-20250721083506036.png)
+
+![image-20250721083418005](Linux网络编程.assets/image-20250721083418005.png)
+
+
+
+- 客户端
+
+![image-20250721095559577](Linux网络编程.assets/image-20250721095559577.png)
+
+
+
+## 代码
+
+- 服务器端
+
+![image-20250721095944875](Linux网络编程.assets/image-20250721095944875.png)
+
+![image-20250721100104889](Linux网络编程.assets/image-20250721100104889.png)
+
+![image-20250721100212140](Linux网络编程.assets/image-20250721100212140.png)
+
+![image-20250721100346116](Linux网络编程.assets/image-20250721100346116.png)
+
+![image-20250721100427488](Linux网络编程.assets/image-20250721100427488.png)
+
+
+
+- 客户端
+
+![image-20250721100708538](Linux网络编程.assets/image-20250721100708538.png)
+
+![image-20250721102059526](Linux网络编程.assets/image-20250721102059526.png)
+
+![image-20250721102227833](Linux网络编程.assets/image-20250721102227833.png)
+
+
+
+- 进程间通信的场景
+
+![image-20250721102824481](Linux网络编程.assets/image-20250721102824481.png)
+
+![image-20250721103626927](Linux网络编程.assets/image-20250721103626927.png)
+
+
+
+
+
+
+
+# Libevent
+
+## 特点
+
+![image-20250722193423002](Linux网络编程.assets/image-20250722193423002.png)
+
+![image-20250722195229407](Linux网络编程.assets/image-20250722195229407.png)
+
+![image-20250722195213779](Linux网络编程.assets/image-20250722195213779.png)
+
+
+
+![image-20250722202045742](Linux网络编程.assets/image-20250722202045742.png)
+
+
+
+
+
+## 事件处理框架的创建----event_base
+
+![image-20250723130113511](Linux网络编程.assets/image-20250723130113511.png)
+
+
+
+- API函数
+
+![image-20250723131603935](Linux网络编程.assets/image-20250723131603935.png)
+
+
+
+## 启动事件循环函数--event_base_dispatch()函数
+
+![image-20250723131837496](Linux网络编程.assets/image-20250723131837496.png)
+
+
+
+- 启动事件循环
+
+![image-20250723132550139](Linux网络编程.assets/image-20250723132550139.png)
+
+
+
+![image-20250723132736008](Linux网络编程.assets/image-20250723132736008.png)
+
+
+
+## 事件的终止函数
+
+- 终止事件循环
+
+![image-20250723133037407](Linux网络编程.assets/image-20250723133037407.png)
+
+
+
+
+
+## 事件的创建和销毁
+
+![image-20250723140556593](Linux网络编程.assets/image-20250723140556593.png)
+
+![image-20250723140510654](Linux网络编程.assets/image-20250723140510654.png)
+
+![image-20250723140446891](Linux网络编程.assets/image-20250723140446891.png)
+
+==事件被创建之后，不能被事件处理框直接检测==
+
+
+
+## 事件的添加和删除
+
+![image-20250723153549344](Linux网络编程.assets/image-20250723153549344.png)
+
+
+
+
+## 事件和事件处理框架之间的关系
+
+![image-20250723141137487](Linux网络编程.assets/image-20250723141137487.png)
+
+![image-20250723141531772](Linux网络编程.assets/image-20250723141531772.png)
+
+
+
+## 通过event事件写管道
+
+- 写端
+
+![image-20250723151431437](Linux网络编程.assets/image-20250723151431437.png)
+
+![image-20250723151517928](Linux网络编程.assets/image-20250723151517928.png)
+
+![image-20250723151745379](Linux网络编程.assets/image-20250723151745379.png)
+
+![image-20250723151806059](Linux网络编程.assets/image-20250723151806059.png)
+
+
+
+- 读端
+
+ ![image-20250723153051925](Linux网络编程.assets/image-20250723153051925.png)
+
+![image-20250723153114379](Linux网络编程.assets/image-20250723153114379.png)
+
+![image-20250723153148197](Linux网络编程.assets/image-20250723153148197.png)
+
+![image-20250723153234960](Linux网络编程.assets/image-20250723153234960.png)
+
+
+
+
+
+## 带缓冲区的事件
+
+![image-20250723171706522](Linux网络编程.assets/image-20250723171706522.png)
+
+![image-20250723165050732](Linux网络编程.assets/image-20250723165050732.png)
+
+![image-20250723160558337](Linux网络编程.assets/image-20250723160558337.png)
+
+![image-20250723165153692](Linux网络编程.assets/image-20250723165153692.png)
+
+![image-20250723165217414](Linux网络编程.assets/image-20250723165217414.png)
+
+
+
+
+
+## 创建带缓冲区的事件
+
+![image-20250723172111794](Linux网络编程.assets/image-20250723172111794.png)
+
+
+
+
+
+## 连接服务器函数--buffferevent_socket_connect()
+
+![image-20250723172708151](Linux网络编程.assets/image-20250723172708151.png)
+
+
+
+
+
+## bufferevent缓冲区的读写函数
+
+![image-20250723175134999](Linux网络编程.assets/image-20250723175134999.png)
+
+
+
+## 给bufferevent设置回调函数bufferevent_setcb()
+
+![image-20250723180341373](Linux网络编程.assets/image-20250723180341373.png)
+
+![image-20250723180411074](Linux网络编程.assets/image-20250723180411074.png)
