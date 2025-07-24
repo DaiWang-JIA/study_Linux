@@ -1221,7 +1221,7 @@ void FD_ZERO(fd_set *set);
 
 ![image-20250723172111794](Linux网络编程.assets/image-20250723172111794.png)
 
-
+ 
 
 
 
@@ -1241,6 +1241,102 @@ void FD_ZERO(fd_set *set);
 
 ## 给bufferevent设置回调函数bufferevent_setcb()
 
-![image-20250723180341373](Linux网络编程.assets/image-20250723180341373.png)
+
 
 ![image-20250723180411074](Linux网络编程.assets/image-20250723180411074.png)
+
+
+
+## bufferevent回调函数原型
+
+![image-20250723181254390](Linux网络编程.assets/image-20250723181254390.png)
+
+
+
+
+
+## 基于bufferevent的套接字客户端处理流程
+
+![image-20250723213701279](Linux网络编程.assets/image-20250723213701279.png)
+
+
+
+![image-20250723213738589](Linux网络编程.assets/image-20250723213738589.png)
+
+
+
+
+
+
+
+## 套接字通信的客户端代码实现
+
+![image-20250724144134433](Linux网络编程.assets/image-20250724144134433.png)
+
+![image-20250724144211125](Linux网络编程.assets/image-20250724144211125.png)
+
+![image-20250724144423571](Linux网络编程.assets/image-20250724144423571.png)
+
+![image-20250724143803339](Linux网络编程.assets/image-20250724143803339.png)
+
+![image-20250724143903614](Linux网络编程.assets/image-20250724143903614.png)
+
+
+
+
+
+
+
+## 链接监听器
+
+![image-20250724145811169](Linux网络编程.assets/image-20250724145811169.png)
+
+
+
+- 创建和释放evconnlistener
+
+![image-20250724153354504](Linux网络编程.assets/image-20250724153354504.png)
+
+![image-20250724153927698](Linux网络编程.assets/image-20250724153927698.png)
+
+![image-20250724153950171](Linux网络编程.assets/image-20250724153950171.png)
+
+
+
+- 链接监听器的回调函数
+
+![image-20250724155309332](Linux网络编程.assets/image-20250724155309332.png)
+
+
+
+![image-20250724155715955](Linux网络编程.assets/image-20250724155715955.png)
+
+
+
+
+
+## 套接字服务器端处理流程
+
+![image-20250724160247681](Linux网络编程.assets/image-20250724160247681.png)
+
+![image-20250724160315844](Linux网络编程.assets/image-20250724160315844.png)
+
+
+
+
+
+## 套接字服务器端代码实现
+
+![image-20250724161939488](Linux网络编程.assets/image-20250724161939488.png)
+
+![image-20250724162026800](Linux网络编程.assets/image-20250724162026800.png)
+
+![image-20250724162157408](Linux网络编程.assets/image-20250724162157408.png)
+
+![image-20250724162246161](Linux网络编程.assets/image-20250724162246161.png)
+
+![image-20250724162348591](Linux网络编程.assets/image-20250724162348591.png)
+
+![image-20250724162420079](Linux网络编程.assets/image-20250724162420079.png)
+
+![image-20250724162527520](Linux网络编程.assets/image-20250724162527520.png)
